@@ -90,39 +90,26 @@ var palette = {
     black: { r: 0, b: 0, g: 0, a: 255 },
 }
 
-// function Color(imageData, ctx, w, h) {
-//     this.imageData = imageData;
-//     this.ctx = ctx;
-//     this.w = w;
-//     this.h = h;
-// }
-
-// Object.assign(Color, {
-// })
-
-function Color(imageData, ctx, w, h) {
+function Color(ctx, ix, iy, w, h) {
     var data = ctx.createImageData(w, h)
-    var pixels = imageData.data;
+    var pixels = spriteData.data;
 
-    for (var y = 0; y < h; y++) {
-        for (var x = 0; x < w; x++) {
-            index = (x + y * imageData.width) * 4;
+    for (var y = iy, yt = 0; y < iy + 8; y++ , yt++) {
+        for (var x = ix, xt = 0; x < ix + 8; x++ , xt++) {
+            index = (x + y * spriteData.width) * 4;
 
             var r = pixels[index + 0];
             var g = pixels[index + 1];
             var b = pixels[index + 2];
             var a = pixels[index + 3];
 
-            if (r === 81 && g === 81 && b === 81) {
-                setPixel(data, x, y, 255, 0, b, a);
+            if (r === 81 && b === 81 && g === 81) {
+                setPixel(data, xt, yt, 96, 128, 56, a);
+            } else if (r === 173 && b === 173 && g === 173) {
+                setPixel(data, xt, yt, 100, 228, 156, a);
             } else {
-                setPixel(data, x, y, r, g, b, a);
+                setPixel(data, xt, yt, r, g, b, a);
             }
-
-            var r = data.data[index + 0];
-            var g = data.data[index + 1];
-            var b = data.data[index + 2];
-            var a = data.data[index + 3];
         }
     }
 
@@ -152,8 +139,9 @@ function init() {
             var cx = x << 3;
             var cy = y << 3;
 
-            var data = Color(spriteData, ctx, 8, 8);
-            ctx.putImageData(data, cx, cy);
+            var data = Color(ctx, 0, 0, 8, 8);
+            // var scaled = scaleImageData(ctx, data, 20);
+            ctx.putImageData(data, 0, 0);
         }
     }
     console.timeEnd("create sprites")
